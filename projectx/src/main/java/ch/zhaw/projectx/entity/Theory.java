@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class Theory extends Belief {
 
-    private String principle;
+    private String evidenceLevel;
 
     @OneToMany(mappedBy = "theory", cascade = CascadeType.ALL)
     private List<Belief> beliefs;
