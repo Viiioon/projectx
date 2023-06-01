@@ -15,7 +15,7 @@ public abstract class Belief {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String beliefStatement;
+    private String statement;
 
     @OneToMany(mappedBy = "belief", cascade = CascadeType.ALL)
     private List<Explanation> explanations;

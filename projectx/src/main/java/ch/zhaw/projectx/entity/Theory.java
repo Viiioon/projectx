@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 public class Theory extends Belief {
 
-    private String evidenceLevel;
+    private String theory_statement;
 
     @OneToMany
     private List<Belief> beliefs;
