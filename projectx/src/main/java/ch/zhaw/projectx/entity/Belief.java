@@ -17,12 +17,7 @@ public abstract class Belief {
 
     private String beliefStatement;
 
-    private String validationStatus;
-
     @OneToMany(mappedBy = "belief", cascade = CascadeType.ALL)
     private List<Explanation> explanations;
 
-    @ManyToOne
-    @JoinColumn(name = "theory_id")
-    private Theory theory;
 }
