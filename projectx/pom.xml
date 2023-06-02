@@ -59,6 +59,12 @@
 			<artifactId>jakarta.annotation-api</artifactId>
 			<version>2.1.1</version>
 		</dependency>
+		<!-- https://github.com/mdeanda/lorem -->
+		<dependency>
+			<groupId>com.thedeanda</groupId>
+			<artifactId>lorem</artifactId>
+			<version>2.1</version>
+		</dependency>
 
 
 	</dependencies>
