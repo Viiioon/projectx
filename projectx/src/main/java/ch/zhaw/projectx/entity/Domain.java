@@ -1,5 +1,6 @@
 package ch.zhaw.projectx.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Domain {
     private String areaOfStudy;
 
     @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Explanation> explanations;
 
 
