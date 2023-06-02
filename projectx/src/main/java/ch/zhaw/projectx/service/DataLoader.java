@@ -3,7 +3,6 @@ package ch.zhaw.projectx.service;
 import ch.zhaw.projectx.dto.NaturalProofsDataset;
 import ch.zhaw.projectx.dto.TheoremInfo;
 import ch.zhaw.projectx.entity.Domain;
-import ch.zhaw.projectx.entity.Explanation;
 import ch.zhaw.projectx.entity.Theorem;
 import ch.zhaw.projectx.repository.BeliefRepository;
 import ch.zhaw.projectx.repository.DomainRepository;
