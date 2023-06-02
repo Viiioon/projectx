@@ -3,6 +3,7 @@ package ch.zhaw.projectx.service;
 import ch.zhaw.projectx.dto.NaturalProofsDataset;
 import ch.zhaw.projectx.dto.TheoremInfo;
 import ch.zhaw.projectx.entity.Domain;
+import ch.zhaw.projectx.entity.Explanation;
 import ch.zhaw.projectx.entity.Theorem;
 import ch.zhaw.projectx.repository.BeliefRepository;
 import ch.zhaw.projectx.repository.DomainRepository;
@@ -79,6 +80,7 @@ public class DataLoader {
 
     public void extractDomainInfoFromData(TheoremInfo data) {
         Domain domain = new Domain();
+        Explanation explanation = new Explanation();
         // Apparently not every theorem has a top level category assigned, thus this check
         if (!data.getToplevel_categories().isEmpty()) {
             // Only the first element of the top level categories will be extracted as its enough reasonable
