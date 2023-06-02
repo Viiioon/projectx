@@ -10,6 +10,8 @@ import ch.zhaw.projectx.repository.DomainRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -17,6 +19,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 
 @Service
 public class DataLoader {
@@ -82,21 +86,18 @@ public class DataLoader {
 
     public void extractDomainInfoFromData(TheoremInfo data, ArrayList<DomainInfo> domainInfoList) {
         Domain domain = new Domain();
-        String topLevelCategory;
         // Apparently not every theorem has a top level category assigned, thus this check
         if (!data.getToplevel_categories().isEmpty()) {
             // Only the first element of the toplevelcategories will be extracted as its enough reasonable
-            topLevelCategory = data.getToplevel_categories().get(0);
-            domain.setName(data.getToplevel_categories().get(0));
+            domain.setAreaOfStudy(data.getToplevel_categories().get(0));
         } else {
-            topLevelCategory = "undefined";
+            domain.setAreaOfStudy("undefined");
         }
         for (String category:data.getCategories()) {
-            DomainInfo domainInfo = new DomainInfo(category,topLevelCategory);
-            domain.setAreaOfStudy(category);
+            domain.setName(category);
             // This check is needed to avoid any duplicate categories in the db
-            if (!domainInfoList.contains(domainInfo)) {
-                domainInfoList.add(domainInfo);
+            if(!domainRepository.existsCategory(category)) {
+                domainRepository.save(domain);
             }
         }
     }
