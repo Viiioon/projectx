@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class Theorem extends Belief {
 
-    private String proofStatus;
+    private String complexityLevel;
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class DataLoader {
@@ -44,7 +45,8 @@ public class DataLoader {
             for (TheoremInfo theoremInfo : theorems) {
                 Theorem theorem = new Theorem();
                 theorem.setParentStatement(theoremInfo.getTitle());
-
+                // Setting the complexity level here as mockaroo does not generate more than 1k records for free accounts
+                theorem.setComplexityLevel(getRandomComplexityLevel());
                 beliefRepository.save(theorem);
             }
 
@@ -61,5 +63,12 @@ public class DataLoader {
             System.err.println("An error occurred:");
             e.printStackTrace();
         }
+    }
+
+    public String getRandomComplexityLevel() {
+        String[] complexityLevels = {"Beginner", "Intermediate", "Advanced", "Expert"};
+        Random random = new Random();
+        int randomIndex = random.nextInt(complexityLevels.length);
+        return complexityLevels[randomIndex];
     }
 }
