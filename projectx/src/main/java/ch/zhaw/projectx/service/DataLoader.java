@@ -80,7 +80,6 @@ public class DataLoader {
 
     public void extractDomainInfoFromData(TheoremInfo data) {
         Domain domain = new Domain();
-        Explanation explanation = new Explanation();
         // Apparently not every theorem has a top level category assigned, thus this check
         if (!data.getToplevel_categories().isEmpty()) {
             // Only the first element of the top level categories will be extracted as its enough reasonable
@@ -89,9 +88,9 @@ public class DataLoader {
             domain.setAreaOfStudy("undefined");
         }
         for (String category:data.getCategories()) {
-            domain.setName(category);
             // This check is needed to avoid any duplicate categories in the db
             if(!domainRepository.existsCategory(category)) {
+                domain.setName(category);
                 domainRepository.save(domain);
             }
         }
