@@ -4,23 +4,17 @@ import ch.zhaw.projectx.dto.NaturalProofsDataset;
 import ch.zhaw.projectx.dto.TheoremInfo;
 import ch.zhaw.projectx.entity.Domain;
 import ch.zhaw.projectx.entity.Theorem;
-import ch.zhaw.projectx.model.DomainInfo;
 import ch.zhaw.projectx.repository.BeliefRepository;
 import ch.zhaw.projectx.repository.DomainRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.ignoreCase;
 
 @Service
 public class DataLoader {
@@ -52,7 +46,6 @@ public class DataLoader {
         try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
             NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
             List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
-            ArrayList<DomainInfo> domains = new ArrayList<DomainInfo>();
 
             for (TheoremInfo theoremInfo : theorems) {
                 Theorem theorem = new Theorem();
@@ -60,7 +53,7 @@ public class DataLoader {
                 theorem.setComplexityLevel(getRandomComplexityLevel());
                 beliefRepository.save(theorem);
 
-                extractDomainInfoFromData(theoremInfo,domains);
+                extractDomainInfoFromData(theoremInfo);
             }
         } catch (JsonProcessingException e) {
             // Handle JSON processing exceptions
@@ -84,11 +77,11 @@ public class DataLoader {
         return complexityLevels[randomIndex];
     }
 
-    public void extractDomainInfoFromData(TheoremInfo data, ArrayList<DomainInfo> domainInfoList) {
+    public void extractDomainInfoFromData(TheoremInfo data) {
         Domain domain = new Domain();
         // Apparently not every theorem has a top level category assigned, thus this check
         if (!data.getToplevel_categories().isEmpty()) {
-            // Only the first element of the toplevelcategories will be extracted as its enough reasonable
+            // Only the first element of the top level categories will be extracted as its enough reasonable
             domain.setAreaOfStudy(data.getToplevel_categories().get(0));
         } else {
             domain.setAreaOfStudy("undefined");
