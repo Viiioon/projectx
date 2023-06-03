@@ -16,7 +16,7 @@ public class TheoremSerializer extends JsonSerializer<Theorem> {
         ObjectNode objectNode = JsonNodeFactory.instance.objectNode();
         objectNode.put("id", theorem.getId());
         objectNode.put("parentStatement", theorem.getParentStatement());
-        objectNode.put("complexityLevel", theorem.getComplexityLevel());
+        objectNode.put("proof", theorem.getProof());
 
         ArrayNode explanationsArray = objectNode.putArray("explanations");
         for (Explanation explanation : theorem.getExplanations()) {

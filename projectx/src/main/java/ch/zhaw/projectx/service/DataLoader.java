@@ -1,6 +1,7 @@
 package ch.zhaw.projectx.service;
 
 import ch.zhaw.projectx.dto.NaturalProofsDataset;
+import ch.zhaw.projectx.dto.Proof;
 import ch.zhaw.projectx.dto.TheoremInfo;
 import ch.zhaw.projectx.entity.Domain;
 import ch.zhaw.projectx.entity.Theorem;
@@ -35,38 +36,38 @@ public class DataLoader {
         Data Source:
         https://github.com/wellecks/naturalproofs
          */
-        try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
-            NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
-            List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
+        if(!beliefRepository.areBeliefsAlreadyInserted()) {
+            try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
+                NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
+                List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
 
-            for (TheoremInfo theoremInfo : theorems) {
-                Theorem theorem = new Theorem();
-                theorem.setParentStatement(theoremInfo.getTitle());
-                theorem.setComplexityLevel(getRandomComplexityLevel());
-                beliefRepository.save(theorem);
+                for (TheoremInfo theoremInfo : theorems) {
+                    Theorem theorem = new Theorem();
+                    theorem.setParentStatement(theoremInfo.getTitle());
+                    StringBuilder concatenatedProofContent = new StringBuilder();
+                    for (Proof proof : theoremInfo.getProofs()) {
+                        concatenatedProofContent.append("\nNext Proof:\n");
+                        concatenatedProofContent.append(String.join("\n", proof.getContents()));
+                    }
+                    theorem.setProof(concatenatedProofContent.toString());
+                    beliefRepository.save(theorem);
 
-                extractDomainInfoFromData(theoremInfo);
+                    extractDomainInfoFromData(theoremInfo);
+                }
+            } catch (JsonProcessingException e) {
+                // Handle JSON processing exceptions
+                System.err.println("Failed to process JSON:");
+                e.printStackTrace();
+            } catch (IOException e) {
+                // Handle I/O exceptions
+                System.err.println("Failed to read file:");
+                e.printStackTrace();
+            } catch (Exception e) {
+                // Handle any other exceptions
+                System.err.println("An error occurred:");
+                e.printStackTrace();
             }
-        } catch (JsonProcessingException e) {
-            // Handle JSON processing exceptions
-            System.err.println("Failed to process JSON:");
-            e.printStackTrace();
-        } catch (IOException e) {
-            // Handle I/O exceptions
-            System.err.println("Failed to read file:");
-            e.printStackTrace();
-        } catch (Exception e) {
-            // Handle any other exceptions
-            System.err.println("An error occurred:");
-            e.printStackTrace();
         }
-    }
-
-    public String getRandomComplexityLevel() {
-        String[] complexityLevels = {"Beginner", "Intermediate", "Advanced", "Expert"};
-        Random random = new Random();
-        int randomIndex = random.nextInt(complexityLevels.length);
-        return complexityLevels[randomIndex];
     }
 
     public void extractDomainInfoFromData(TheoremInfo data) {
