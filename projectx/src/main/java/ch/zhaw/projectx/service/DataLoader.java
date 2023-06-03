@@ -33,14 +33,6 @@ public class DataLoader {
     public void loadData() {
         /*
         Data Source:
-        @inproceedings{welleck2021naturalproofs,
-        title={NaturalProofs: Mathematical Theorem Proving in Natural Language},
-        author={Sean Welleck and Jiacheng Liu and Ronan Le Bras and Hannaneh Hajishirzi and Yejin Choi and Kyunghyun Cho},
-        booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 1)},
-        year={2021},
-        url={https://openreview.net/forum?id=Jvxa8adr3iY}
-        }
-        from:
         https://github.com/wellecks/naturalproofs
          */
         try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
