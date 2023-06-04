@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
+
 public class TheoremSerializer extends JsonSerializer<Theorem> {
 
     @Override
@@ -22,7 +23,7 @@ public class TheoremSerializer extends JsonSerializer<Theorem> {
         for (Explanation explanation : theorem.getExplanations()) {
             ObjectNode explanationNode = explanationsArray.addObject();
             explanationNode.put("id", explanation.getId());
-            explanationNode.put("dateExplained", explanation.getDateExplained().getTime());
+            explanationNode.put("dateExplained", explanation.getDateExplained().toString());
         }
 
         jsonGenerator.writeObject(objectNode);

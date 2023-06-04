@@ -19,13 +19,11 @@ public class TheorySerializer extends JsonSerializer<Theory> {
         objectNode.put("id", theory.getId());
         objectNode.put("theory_statement", theory.getTheoryStatement());
 
-        // Serialize the beliefs list with the parentStatement field included
         ArrayNode beliefsNode = objectNode.putArray("beliefs");
         for (Belief belief : theory.getBeliefs()) {
             ObjectNode beliefNode = beliefsNode.addObject();
             beliefNode.put("id", belief.getId());
             beliefNode.put("parentStatement", belief.getParentStatement());
-            // Add any other fields you want to include
         }
 
         jsonGenerator.writeObject(objectNode);
