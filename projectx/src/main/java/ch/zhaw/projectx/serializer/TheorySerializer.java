@@ -17,7 +17,7 @@ public class TheorySerializer extends JsonSerializer<Theory> {
     public void serialize(Theory theory, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         ObjectNode objectNode = JsonNodeFactory.instance.objectNode();
         objectNode.put("id", theory.getId());
-        objectNode.put("theory_statement", theory.getTheoryStatement());
+        objectNode.put("theoryStatement", theory.getTheoryStatement());
 
         ArrayNode beliefsNode = objectNode.putArray("beliefs");
         for (Belief belief : theory.getBeliefs()) {

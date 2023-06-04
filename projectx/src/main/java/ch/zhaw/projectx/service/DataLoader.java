@@ -46,7 +46,7 @@ public class DataLoader {
                     theorem.setParentStatement(theoremInfo.getTitle());
                     StringBuilder concatenatedProofContent = new StringBuilder();
                     for (Proof proof : theoremInfo.getProofs()) {
-                        concatenatedProofContent.append("\nNext Proof:\n");
+                        concatenatedProofContent.append("Proof:\n");
                         concatenatedProofContent.append(String.join("\n", proof.getContents()));
                     }
                     theorem.setProof(concatenatedProofContent.toString());
