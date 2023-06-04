@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @Entity
 public class Domain {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
