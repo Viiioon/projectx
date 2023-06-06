@@ -41,21 +41,7 @@ public class DataLoader {
                 List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
 
                 for (TheoremInfo theoremInfo : theorems) {
-                    Theorem theorem = new Theorem();
-                    theorem.setParentStatement(theoremInfo.getTitle());
-                    StringBuilder concatenatedProofContent = new StringBuilder();
-                    if (theoremInfo.getProofs().isEmpty()) {
-                        theorem.setProof("No Proof available");
-                    } else {
-                        for (Proof proof : theoremInfo.getProofs()) {
-                            concatenatedProofContent.append("Proof:\n");
-                            concatenatedProofContent.append(String.join("\n", proof.getContents()));
-                        }
-                        theorem.setProof(concatenatedProofContent.toString());
-
-                    }
-                    beliefRepository.save(theorem);
-
+                    extractStatementsFromData(theoremInfo);
                     extractDomainInfoFromData(theoremInfo);
                 }
             } catch (JsonProcessingException e) {
@@ -90,5 +76,22 @@ public class DataLoader {
                 domainRepository.save(domain);
             }
         }
+    }
+
+    public void extractStatementsFromData(TheoremInfo data) {
+        Theorem theorem = new Theorem();
+        theorem.setParentStatement(data.getTitle());
+        StringBuilder concatenatedProofContent = new StringBuilder();
+        if (data.getProofs().isEmpty()) {
+            theorem.setProof("No Proof available");
+        } else {
+            for (Proof proof : data.getProofs()) {
+                concatenatedProofContent.append("Proof:\n");
+                concatenatedProofContent.append(String.join("\n", proof.getContents()));
+            }
+            theorem.setProof(concatenatedProofContent.toString());
+
+        }
+        beliefRepository.save(theorem);
     }
 }
