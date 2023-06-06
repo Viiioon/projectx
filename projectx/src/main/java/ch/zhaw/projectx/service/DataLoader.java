@@ -70,7 +70,7 @@ public class DataLoader {
             domain.setAreaOfStudy("undefined");
         }
         for (String category:data.getCategories()) {
-            // This check is needed to avoid any duplicate categories in the db
+            // This check is needed to avoid any duplicate categories in column "name" in the db
             if(!domainRepository.existsCategory(category)) {
                 domain.setName(category);
                 domainRepository.save(domain);
