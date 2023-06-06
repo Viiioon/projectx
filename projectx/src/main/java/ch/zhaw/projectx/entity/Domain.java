@@ -19,9 +19,4 @@ public class Domain {
     private String name;
     private String areaOfStudy;
 
-    @OneToMany(mappedBy = "domain", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Explanation> explanations;
-
-
 }

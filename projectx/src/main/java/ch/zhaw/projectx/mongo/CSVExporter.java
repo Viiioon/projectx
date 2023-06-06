@@ -21,4 +21,17 @@ public class CSVExporter {
             e.printStackTrace();
         }
     }
+
+    public void exportEdgesToCSV(ArrayList<Document> dataList, String filePath) {
+        try (CSVWriter writer = new CSVWriter(new FileWriter(filePath))) {
+            for (Document data : dataList) {
+                Integer smallerId = data.getInteger("smaller_domain_id");
+                Integer largerId = data.getInteger("larger_domain_id");
+                String[] line = {String.valueOf(smallerId), String.valueOf(largerId)};
+                writer.writeNext(line, false);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

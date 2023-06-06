@@ -49,7 +49,7 @@ public class DomainController {
     }
 
     @GetMapping("/exportNodes")
-    public ResponseEntity<String> exportDomainsToCsv() {
+    public ResponseEntity<String> exportNodes() {
         ArrayList<Document> dataList = mongoDataAccess.retrieveNodes();
 
         String filePath = "C:/Users/vionh/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/nodes.csv";
@@ -57,6 +57,18 @@ public class DomainController {
         CSVExporter csvExporter = new CSVExporter();
         csvExporter.exportNodesToCSV(dataList, filePath);
 
-        return ResponseEntity.ok("CSV export complete");
+        return ResponseEntity.ok("CSV export of nodes complete");
+    }
+
+    @GetMapping("/exportEdges")
+    public ResponseEntity<String> exportEdges() {
+        ArrayList<Document> dataList = mongoDataAccess.retrieveEdges();
+
+        String filePath = "C:/Users/vionh/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/edges.csv";
+
+        CSVExporter csvExporter = new CSVExporter();
+        csvExporter.exportEdgesToCSV(dataList, filePath);
+
+        return ResponseEntity.ok("CSV export of edges complete");
     }
 }
