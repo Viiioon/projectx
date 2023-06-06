@@ -44,11 +44,16 @@ public class DataLoader {
                     Theorem theorem = new Theorem();
                     theorem.setParentStatement(theoremInfo.getTitle());
                     StringBuilder concatenatedProofContent = new StringBuilder();
-                    for (Proof proof : theoremInfo.getProofs()) {
-                        concatenatedProofContent.append("Proof:\n");
-                        concatenatedProofContent.append(String.join("\n", proof.getContents()));
+                    if (theoremInfo.getProofs().isEmpty()) {
+                        theorem.setProof("No Proof available");
+                    } else {
+                        for (Proof proof : theoremInfo.getProofs()) {
+                            concatenatedProofContent.append("Proof:\n");
+                            concatenatedProofContent.append(String.join("\n", proof.getContents()));
+                        }
+                        theorem.setProof(concatenatedProofContent.toString());
+
                     }
-                    theorem.setProof(concatenatedProofContent.toString());
                     beliefRepository.save(theorem);
 
                     extractDomainInfoFromData(theoremInfo);
