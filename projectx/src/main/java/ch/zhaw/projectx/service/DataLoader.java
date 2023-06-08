@@ -31,50 +31,31 @@ public class DataLoader {
 
     @PostConstruct
     public void loadData() {
-        /*
-        Data Source:
-        https://github.com/wellecks/naturalproofs
-         */
-        if(!beliefRepository.areBeliefsAlreadyInserted()) {
-            try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
-                NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
-                List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
+        // Data Source: https://github.com/wellecks/naturalproofs
+        try (InputStream inputStream = getClass().getResourceAsStream("/data/naturalproofs_proofwiki.json")) {
+            NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
+            List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
 
+            // To avoid inserting redundant data into database
+            if (beliefRepository.count() != theorems.size()) {
                 for (TheoremInfo theoremInfo : theorems) {
                     extractStatementsFromData(theoremInfo);
                     extractDomainInfoFromData(theoremInfo);
                 }
-            } catch (JsonProcessingException e) {
-                // Handle JSON processing exceptions
-                System.err.println("Failed to process JSON:");
-                e.printStackTrace();
-            } catch (IOException e) {
-                // Handle I/O exceptions
-                System.err.println("Failed to read file:");
-                e.printStackTrace();
-            } catch (Exception e) {
-                // Handle any other exceptions
-                System.err.println("An error occurred:");
-                e.printStackTrace();
             }
-        }
-    }
 
-    public void extractDomainInfoFromData(TheoremInfo data) {
-        Domain domain = new Domain();
-        // Apparently not every theorem has a top level category assigned, thus this check
-        if (!data.getToplevel_categories().isEmpty()) {
-            // Only the first element of the top level categories will be extracted as its enough reasonable
-            domain.setAreaOfStudy(data.getToplevel_categories().get(0));
-        } else {
-            domain.setAreaOfStudy("undefined");
-        }
-        for (String category:data.getCategories()) {
-            // This check is needed to avoid any duplicate categories in column "name" in the db
-            if(!domainRepository.existsCategory(category)) {
-                domain.setName(category);
-                domainRepository.save(domain);
-            }
+        } catch (JsonProcessingException e) {
+            // Handle JSON processing exceptions
+            System.err.println("Failed to process JSON:");
+            e.printStackTrace();
+        } catch (IOException e) {
+            // Handle I/O exceptions
+            System.err.println("Failed to read file:");
+            e.printStackTrace();
+        } catch (Exception e) {
+            // Handle any other exceptions
+            System.err.println("An error occurred:");
+            e.printStackTrace();
         }
     }
 
@@ -93,5 +74,23 @@ public class DataLoader {
 
         }
         beliefRepository.save(theorem);
+    }
+
+    public void extractDomainInfoFromData(TheoremInfo data) {
+        Domain domain = new Domain();
+        // Apparently not every theorem has a top level category assigned, thus this check
+        if (!data.getToplevel_categories().isEmpty()) {
+            // Only the first element of the top level categories will be extracted as its enough reasonable
+            domain.setAreaOfStudy(data.getToplevel_categories().get(0));
+        } else {
+            domain.setAreaOfStudy("undefined");
+        }
+        for (String category : data.getCategories()) {
+            // This check is needed to avoid any duplicate categories in column "name" in the db
+            if (!domainRepository.existsCategory(category)) {
+                domain.setName(category);
+                domainRepository.save(domain);
+            }
+        }
     }
 }
