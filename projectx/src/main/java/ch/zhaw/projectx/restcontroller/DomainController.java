@@ -52,7 +52,7 @@ public class DomainController {
     public ResponseEntity<String> exportNodes() {
         ArrayList<Document> dataList = mongoDataAccess.retrieveNodes();
 
-        String filePath = "C:/Users/vionh/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/nodes.csv";
+        String filePath = System.getProperty("user.home") + "/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/nodes.csv";
 
         CSVExporter csvExporter = new CSVExporter();
         csvExporter.exportNodesToCSV(dataList, filePath);
