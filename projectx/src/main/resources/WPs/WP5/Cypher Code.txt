@@ -1,0 +1,48 @@
+--- Load data ---
+
+LOAD CSV FROM 'file:///nodes.csv' AS row
+WITH toInteger(row[0]) AS domainId, row[1] AS domainName
+MERGE (d:Domain {domainId: domainId})
+  SET d.domainName = domainName
+RETURN count(d);
+
+MATCH (d:Domain)
+RETURN d;
+
+LOAD CSV FROM 'file:///edges.csv' AS row
+WITH toInteger(row[0]) AS domainLHSId, toInteger(row[1]) AS domainRHSId
+MATCH (nodeLHS:Domain {domainId: domainRHSId})
+MATCH (nodeRHS:Domain {domainId: domainLHSId})
+MERGE (nodeLHS)-[edge:sameBelief]-(nodeRHS)
+RETURN count(edge)
+
+--- Centrality Calculations ---
+
+:use neo4j;
+
+:param limit => ( 42);
+:param config => ({
+  relationshipWeightProperty: null
+});
+:param graphConfig => ({
+  nodeProjection: '*',
+  relationshipProjection: {
+    relType: {
+      type: '*',
+      orientation: 'REVERSE',
+      properties: {}
+    }
+  }
+});
+:param communityNodeLimit => ( 10);
+:param generatedName => ('in-memory-graph-1686066221307');
+
+CALL gds.graph.project($generatedName, $graphConfig.nodeProjection, $graphConfig.relationshipProjection, {});
+
+CALL gds.degree.stream($generatedName, $config) YIELD nodeId, score
+WITH gds.util.asNode(nodeId) AS node, score
+RETURN node, score
+ORDER BY score DESC
+LIMIT toInteger($limit);
+
+CALL gds.graph.drop($generatedName);

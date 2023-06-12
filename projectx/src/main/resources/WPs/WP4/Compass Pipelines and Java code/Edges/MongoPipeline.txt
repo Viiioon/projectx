@@ -1,0 +1,27 @@
+[
+  {
+    $lookup: {
+      from: "explanation",
+      localField: "belief.id",
+      foreignField: "belief.id",
+      as: "matching_explanations"
+    }
+  },
+  {
+    $unwind: "$matching_explanations"
+  },
+  {
+    $match: {
+      $expr: {
+        $lt: ["$domain.id", "$matching_explanations.domain.id"]
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      smaller_domain_id: "$domain.id",
+      larger_domain_id: "$matching_explanations.domain.id"
+    }
+  }
+]

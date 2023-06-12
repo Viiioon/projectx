@@ -1,0 +1,4 @@
+Arrays.asList(new Document("$project", 
+    new Document("_id", 0L)
+            .append("id", 1L)
+            .append("name", 1L)))
