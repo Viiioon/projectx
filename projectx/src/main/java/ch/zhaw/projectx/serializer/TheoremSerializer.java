@@ -24,6 +24,10 @@ public class TheoremSerializer extends JsonSerializer<Theorem> {
             ObjectNode explanationNode = explanationsArray.addObject();
             explanationNode.put("id", explanation.getId());
             explanationNode.put("dateExplained", explanation.getDateExplained().toString());
+            ObjectNode domainNode = explanationNode.putObject("domain");
+            domainNode.put("id", explanation.getDomain().getId());
+            domainNode.put("name", explanation.getDomain().getName());
+            domainNode.put("areaOfStudy", explanation.getDomain().getAreaOfStudy());
         }
 
         jsonGenerator.writeObject(objectNode);
