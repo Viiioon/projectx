@@ -62,6 +62,30 @@ public class DomainController {
         }
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteDomain(@PathVariable("id") long id) {
+        try {
+            domainRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Domain> updateDomain(@PathVariable("id") long id, @RequestBody Domain domain) {
+        Optional<Domain> domainData = domainRepository.findById(id);
+
+        if (domainData.isPresent()) {
+            Domain _domain = domainData.get();
+            _domain.setName(domain.getName());
+            _domain.setAreaOfStudy(domain.getAreaOfStudy());
+            return new ResponseEntity<>(domainRepository.save(_domain), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/exportNodes")
     public ResponseEntity<String> exportNodes() {
         ArrayList<Document> dataList = mongoDataAccess.retrieveNodes();
