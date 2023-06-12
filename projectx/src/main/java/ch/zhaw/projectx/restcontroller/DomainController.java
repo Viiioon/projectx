@@ -4,6 +4,7 @@ import ch.zhaw.projectx.entity.Domain;
 import ch.zhaw.projectx.mongo.CSVExporter;
 import ch.zhaw.projectx.mongo.MongoDataAccess;
 import ch.zhaw.projectx.repository.DomainRepository;
+
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,6 +49,19 @@ public class DomainController {
 
     }
 
+    @PostMapping
+    public ResponseEntity<Domain> createDomain(@RequestBody Domain domain) {
+        Domain domainToSave = new Domain();
+        domainToSave.setName(domain.getName());
+        domainToSave.setAreaOfStudy(domain.getAreaOfStudy());
+        try {
+            Domain _domain = domainRepository.save(domainToSave);
+            return new ResponseEntity<>(_domain, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/exportNodes")
     public ResponseEntity<String> exportNodes() {
         ArrayList<Document> dataList = mongoDataAccess.retrieveNodes();
@@ -64,7 +78,7 @@ public class DomainController {
     public ResponseEntity<String> exportEdges() {
         ArrayList<Document> dataList = mongoDataAccess.retrieveEdges();
 
-        String filePath = "C:/Users/vionh/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/edges.csv";
+        String filePath = System.getProperty("user.home") + "/OneDrive/Dokumente/ZHAW/Module/2023FS/Data Management/Project X/WP4/Data/edges.csv";
 
         CSVExporter csvExporter = new CSVExporter();
         csvExporter.exportEdgesToCSV(dataList, filePath);
