@@ -36,7 +36,7 @@ public class DataLoader {
             NaturalProofsDataset naturalProofsDataset = objectMapper.readValue(inputStream, NaturalProofsDataset.class);
             List<TheoremInfo> theorems = naturalProofsDataset.getDataset().getTheorems();
 
-            // To avoid inserting redundant data into database
+            // To avoid inserting redundant data into database and magic number
             if (beliefRepository.count() != theorems.size()) {
                 for (TheoremInfo theoremInfo : theorems) {
                     extractStatementsFromData(theoremInfo);
